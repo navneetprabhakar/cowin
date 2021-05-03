@@ -1,5 +1,7 @@
 package com.cowin.apis.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -7,6 +9,8 @@ import lombok.Data;
  * @author navneetprabhakar
  */
 @Data
+@ApiModel
 public class AuthenticationRequest {
+    @ApiModelProperty(notes = "Mobile number of the user")
     private String mobile;
 }
