@@ -1,8 +1,6 @@
 package com.cowin.apis.utils;
 
 import com.cowin.apis.exception.SystemException;
-import com.cowin.apis.models.StatesAPIResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.NameValuePair;
@@ -82,13 +80,13 @@ public class RestUtils {
 
     private ResponseEntity<String> restPostCall(final String url, final HttpHeaders httpHeaders,
               final Map<String, String> queryParams, final Object request) throws IOException {
-        HttpEntity<?> entity = new HttpEntity<>(mapper.writeValueAsString(request),httpHeaders);
+        HttpEntity<String> entity = new HttpEntity<>(mapper.writeValueAsString(request),httpHeaders);
         String uri = url;
         if (null != queryParams && !queryParams.isEmpty()) {
             uri = addQueryParameters(queryParams, uri);
         }
         log.info("Request url:{} headers:{} queryParams:{} body:{}", uri, httpHeaders, queryParams, mapper.writeValueAsString(request));
-        return restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+        return restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
     }
 
 

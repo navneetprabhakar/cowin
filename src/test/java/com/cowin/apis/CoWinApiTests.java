@@ -1,17 +1,21 @@
 package com.cowin.apis;
 
 import com.cowin.apis.constants.CowinProperties;
+import com.cowin.apis.models.AuthenticationRequest;
+import com.cowin.apis.models.OTPRequest;
 import com.cowin.apis.service.CoWinAppointmentService;
 import com.cowin.apis.service.CoWinAuthenticationService;
 import com.cowin.apis.service.CoWinLocationService;
 import com.cowin.apis.service.impl.CoWinAppointmentServiceImpl;
+import com.cowin.apis.service.impl.CoWinAuthenticationServiceImpl;
+import com.cowin.apis.service.impl.CoWinLocationServiceImpl;
 import com.cowin.apis.utils.RestUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -25,18 +29,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Junit test cases for @{@link com.cowin.apis.controller.CoWinAppointmentController}
+ * Junit test cases for @{@link com.cowin.apis.controller.CoWinAppointmentController} & @{@link com.cowin.apis.controller.CoWinLocationController}
  */
 @ExtendWith(SpringExtension.class)
 @TestPropertySource(value = "classpath:cowin.properties")
 @WebMvcTest
-public class CoWinAppointmentControllerTests {
+public class CoWinApiTests {
 
     @TestConfiguration
-    static class AppointmentServiceTestConfiguration{
+    static class CoWinServiceTestConfiguration{
+        @Bean
+        public CoWinLocationService coWinLocationService(){
+            return new CoWinLocationServiceImpl();
+        }
         @Bean
         public CoWinAppointmentService coWinAppointmentService(){
             return new CoWinAppointmentServiceImpl();
+        }
+        @Bean
+        public CoWinAuthenticationService coWinAuthenticationService(){
+            return new CoWinAuthenticationServiceImpl();
         }
         @Bean
         public RestTemplate restTemplate(){
@@ -55,26 +67,35 @@ public class CoWinAppointmentControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private CoWinAuthenticationService coWinAuthenticationService;
-
-    @MockBean
-    private CoWinLocationService coWinLocationService;
-
-    @Autowired
-    private CoWinAppointmentService coWinAppointmentService;
-
+    private static final ObjectMapper mapper=new ObjectMapper();
     private static final SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-yyyy");
+
+    @Test
+    public void allStatesTest() throws Exception{
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/v1/location/states")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void districtTest() throws Exception{
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/v1/location/findDistrictsByStateId")
+                .param("state_id","1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 
     @Test
     public void findByPinTest() throws Exception{
         String paramDate=sdf.format(new Date());
         this.mockMvc.perform(MockMvcRequestBuilders.get("/v1/appointment/findByPin")
-            .param("pincode","110001")
-            .param("date", paramDate)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.status().isOk());
+                .param("pincode","110001")
+                .param("date", paramDate)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -110,4 +131,23 @@ public class CoWinAppointmentControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    public void generateOtpTest() throws Exception{
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/v1/authentication/generateOtp")
+                .content(mapper.writeValueAsString(new AuthenticationRequest("123456789")))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void confirmOtpTest() throws Exception{
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/v1/authentication/confirmOtp")
+                .content(mapper.writeValueAsString(new OTPRequest("123456789","123")))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().is5xxServerError());
+    }
 }
