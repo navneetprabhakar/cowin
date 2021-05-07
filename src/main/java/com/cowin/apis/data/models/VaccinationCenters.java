@@ -15,6 +15,8 @@ public class VaccinationCenters {
     private Integer centerId;
     @JsonProperty("name")
     private String name;
+    @JsonProperty("address")
+    private String address;
     @JsonProperty("state_name")
     private String stateName;
     @JsonProperty("district_name")

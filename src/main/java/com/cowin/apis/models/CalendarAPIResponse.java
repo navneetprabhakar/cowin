@@ -12,4 +12,5 @@ import java.util.List;
 @Data
 public class CalendarAPIResponse {
     private List<VaccinationCenters> centers;
+    private Long ttl;
 }
