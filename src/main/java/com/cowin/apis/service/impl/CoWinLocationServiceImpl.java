@@ -44,7 +44,7 @@ public class CoWinLocationServiceImpl implements CoWinLocationService {
     @Override
     public DistrictAPIResponse findDistrictsByStateId(String stateId) {
         try{
-            return restUtils.restGetCall(cowinProperties.getBaseUrl()+cowinProperties.getLocationStates(), null, null, DistrictAPIResponse.class);
+            return restUtils.restGetCall(cowinProperties.getBaseUrl()+cowinProperties.getLocationDistrict()+"/"+stateId, null, null, DistrictAPIResponse.class);
         }catch (Exception e){
             log.error("An error occurred while getting All District by State id from CoWin Services:",e);
             throw new SystemException("An error occurred while getting All District by State id from CoWin Services",HttpStatus.INTERNAL_SERVER_ERROR);

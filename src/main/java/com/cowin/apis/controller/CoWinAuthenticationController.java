@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author navneetprabhakar
  */
 @RestController
-@RequestMapping("v1/authentication")
+@RequestMapping(value = "v1/authentication")
 @Api(value = "CoWin Authentication services controller")
 public class CoWinAuthenticationController {
 

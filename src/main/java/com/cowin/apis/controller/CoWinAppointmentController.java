@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author navneetprabhakar
  */
 @RestController
-@RequestMapping("v1/appointment")
+@RequestMapping(value = "v1/appointment")
 @Api(value = "This controller interacts with CoWin Location services")
 public class CoWinAppointmentController {
 

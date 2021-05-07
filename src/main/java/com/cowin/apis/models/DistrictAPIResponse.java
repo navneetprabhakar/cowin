@@ -12,4 +12,5 @@ import java.util.List;
 @Data
 public class DistrictAPIResponse {
     private List<Districts> districts;
+    private Long ttl;
 }

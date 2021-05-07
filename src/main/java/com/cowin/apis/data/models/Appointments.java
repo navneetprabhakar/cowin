@@ -15,6 +15,8 @@ public class Appointments {
     private Integer centerId;
     @JsonProperty("name")
     private String name;
+    @JsonProperty("address")
+    private String address;
     @JsonProperty("state_name")
     private String stateName;
     @JsonProperty("district_name")
@@ -37,6 +39,8 @@ public class Appointments {
     private String session_id;
     @JsonProperty("date")
     private String date;
+    @JsonProperty("available_capacity")
+    private String available_capacity;
     @JsonProperty("fee")
     private String fee;
     @JsonProperty("min_age_limit")
