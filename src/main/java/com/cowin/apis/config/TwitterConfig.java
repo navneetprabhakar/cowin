@@ -2,16 +2,17 @@ package com.cowin.apis.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
 
 /**
  * @author navneetprabhakar
  */
 @Configuration
-public class RestTemplateConfig {
+public class TwitterConfig {
 
     @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    public Twitter twitter(){
+        return TwitterFactory.getSingleton();
     }
 }

@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class Districts {
     @JsonProperty("district_id")
-    private Integer stateId;
+    private Integer districtId;
     @JsonProperty("district_name")
     private String stateName;
 }
