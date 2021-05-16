@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -37,9 +39,9 @@ public class TwitterServiceImpl implements TwitterService {
     @Override
     public ResponseModel postPincodeStatus(Integer pincode) {
         try{
-            SimpleDateFormat sdf= new SimpleDateFormat("dd-MM-yyyy");
-            AppointmentSessionResponse sessionResponse=coWinAppointmentService.findAppointmentByPincode(pincode, sdf.format(new Date()));
-            twitterUtils.postTweetByAppointmentSessionPincode(sessionResponse,sdf.format(new Date()), pincode);
+            String date=new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+            AppointmentSessionResponse sessionResponse=coWinAppointmentService.findAppointmentByPincode(pincode, date);
+            twitterUtils.postTweetByAppointmentSessionPincode(sessionResponse,date, pincode);
             return new ResponseModel("Success", "Done");
         }catch (Exception e){
             log.error("An error occurred in posting tweet about pincode:"+pincode, e);
@@ -51,9 +53,9 @@ public class TwitterServiceImpl implements TwitterService {
     public ResponseModel postDistrictStatus(Integer districtId) {
         try{
             log.info("Initiating tweet generation for district id:{}",districtId);
-            SimpleDateFormat sdf= new SimpleDateFormat("dd-MM-yyyy");
-            AppointmentSessionResponse sessionResponse=coWinAppointmentService.findAppointmentByDistrict(districtId, sdf.format(new Date()));
-            twitterUtils.postTweetByAppointmentSessionDistrictId(sessionResponse);
+            String date=new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+            AppointmentSessionResponse sessionResponse=coWinAppointmentService.findAppointmentByDistrict(districtId, date);
+            twitterUtils.postTweetByAppointmentSessionDistrictId(sessionResponse,date);
             return new ResponseModel("Success", "Done");
         }catch (Exception e){
             log.error("An error occurred in posting tweet about districtId:"+districtId, e);
@@ -66,7 +68,14 @@ public class TwitterServiceImpl implements TwitterService {
         try{
             DistrictAPIResponse districtAPIResponse=coWinLocationService.findDistrictsByStateId(stateId);
             if(!CollectionUtils.isEmpty(districtAPIResponse.getDistricts())){
+                Collections.sort(districtAPIResponse.getDistricts(), new Comparator<Districts>() {
+                    @Override
+                    public int compare(Districts o1, Districts o2) {
+                        return o2.getDistrictId().compareTo(o1.getDistrictId());
+                    }
+                });
                 for(Districts district:districtAPIResponse.getDistricts()){
+                    Thread.sleep(30000);
                     postDistrictStatus(district.getDistrictId());
                 }
             }else{

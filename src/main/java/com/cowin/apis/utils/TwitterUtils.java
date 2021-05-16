@@ -25,9 +25,9 @@ public class TwitterUtils {
      * @param appointments
      * @return Twitter Status string
      */
-    public String prepareTweetByAppointment(Appointments appointments){
+    public String prepareTweetByAppointment(Appointments appointments, String date){
         StringBuilder sb=new StringBuilder();
-        sb.append("Pincode:").append(appointments.getPincode()).append(",");
+        sb.append("Pincode:").append(appointments.getPincode()).append(",").append("Date:").append(date).append(",");
         sb.append("Name:").append(appointments.getName()).append(",").append("Address:").append(appointments.getAddress()).append(",");
         sb.append("Vaccine:").append(appointments.getVaccine()).append(",").append("Available Capacity:")
                 .append(appointments.getAvailable_capacity()).append(",").append("Slots:");
@@ -62,7 +62,7 @@ public class TwitterUtils {
         String tweet=null;
         if(!CollectionUtils.isEmpty(sessionResponse.getSessions())){
             for(Appointments session:sessionResponse.getSessions()){
-                tweet=prepareTweetByAppointment(session);
+                tweet=prepareTweetByAppointment(session,date);
                 if(tweet.length()>=280){
                     tweet=tweet.substring(0,280);
                 }
@@ -81,11 +81,11 @@ public class TwitterUtils {
      * @param sessionResponse : @{@link AppointmentSessionResponse}
      * @throws Exception
      */
-    public void postTweetByAppointmentSessionDistrictId(AppointmentSessionResponse sessionResponse) throws Exception{
+    public void postTweetByAppointmentSessionDistrictId(AppointmentSessionResponse sessionResponse,String date) throws Exception{
         String tweet=null;
         if(!CollectionUtils.isEmpty(sessionResponse.getSessions())){
             for(Appointments session:sessionResponse.getSessions()){
-                tweet=prepareTweetByAppointment(session);
+                tweet=prepareTweetByAppointment(session, date);
                 if(tweet.length()>=280){
                     tweet=tweet.substring(0,280);
                 }

@@ -6,9 +6,11 @@ import com.cowin.apis.models.OTPRequest;
 import com.cowin.apis.service.CoWinAppointmentService;
 import com.cowin.apis.service.CoWinAuthenticationService;
 import com.cowin.apis.service.CoWinLocationService;
+import com.cowin.apis.service.TwitterService;
 import com.cowin.apis.service.impl.CoWinAppointmentServiceImpl;
 import com.cowin.apis.service.impl.CoWinAuthenticationServiceImpl;
 import com.cowin.apis.service.impl.CoWinLocationServiceImpl;
+import com.cowin.apis.service.impl.TwitterServiceImpl;
 import com.cowin.apis.utils.RestUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -49,6 +51,10 @@ public class CoWinApiTests {
         @Bean
         public CoWinAuthenticationService coWinAuthenticationService(){
             return new CoWinAuthenticationServiceImpl();
+        }
+        @Bean
+        public TwitterService twitterService(){
+            return new TwitterServiceImpl();
         }
         @Bean
         public RestTemplate restTemplate(){
