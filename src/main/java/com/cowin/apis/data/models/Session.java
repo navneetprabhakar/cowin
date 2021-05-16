@@ -1,5 +1,6 @@
 package com.cowin.apis.data.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
  * @author navneetprabhakar
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Session {
 
     @JsonProperty("session_id")
@@ -17,6 +19,10 @@ public class Session {
     private String date;
     @JsonProperty("available_capacity")
     private Integer availableCapacity;
+    @JsonProperty("available_capacity_dose1")
+    private String available_capacity_dose1;
+    @JsonProperty("available_capacity_dose2")
+    private String available_capacity_dose2;
     @JsonProperty("min_age_limit")
     private Integer minAgeLimit;
     @JsonProperty("vaccine")

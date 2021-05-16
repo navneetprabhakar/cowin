@@ -1,5 +1,6 @@
 package com.cowin.apis.data.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
  * @author navneetprabhakar
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VaccinationCenters {
     @JsonProperty("center_id")
     private Integer centerId;
