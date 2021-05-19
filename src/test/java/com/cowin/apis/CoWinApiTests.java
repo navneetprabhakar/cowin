@@ -1,5 +1,6 @@
 package com.cowin.apis;
 
+import com.cowin.apis.config.TwitterConfig;
 import com.cowin.apis.constants.CowinProperties;
 import com.cowin.apis.models.AuthenticationRequest;
 import com.cowin.apis.models.OTPRequest;
@@ -12,6 +13,7 @@ import com.cowin.apis.service.impl.CoWinAuthenticationServiceImpl;
 import com.cowin.apis.service.impl.CoWinLocationServiceImpl;
 import com.cowin.apis.service.impl.TwitterServiceImpl;
 import com.cowin.apis.utils.RestUtils;
+import com.cowin.apis.utils.TwitterUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +29,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.client.RestTemplate;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -34,7 +39,7 @@ import java.util.Date;
  * Junit test cases for @{@link com.cowin.apis.controller.CoWinAppointmentController} & @{@link com.cowin.apis.controller.CoWinLocationController}
  */
 @ExtendWith(SpringExtension.class)
-@TestPropertySource(value = "classpath:cowin.properties")
+@TestPropertySource(locations ={"classpath:cowin.properties", "classpath:twitter4j.properties"})
 @WebMvcTest
 public class CoWinApiTests {
 
@@ -68,6 +73,15 @@ public class CoWinApiTests {
         public CowinProperties cowinProperties(){
             return new CowinProperties();
         }
+        @Bean
+        public TwitterUtils twitterUtils(){
+            return new TwitterUtils();
+        }
+        @Bean
+        public Twitter twitter(){
+            return TwitterFactory.getSingleton();
+        }
+
     }
 
     @Autowired
